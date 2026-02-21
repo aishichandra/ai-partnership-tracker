@@ -23,12 +23,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests pandas boto3 python-dotenv
+        pip install -r src/data/requirements.txt
 
     - name: Create .env file
       run: |
-        cd src/data
-        cat > .env << EOF
+        cat > src/data/.env << EOF
         AIRTABLE_API_KEY=${{ secrets.AIRTABLE_API_KEY }}
         AIRTABLE_BASE_ID=${{ secrets.AIRTABLE_BASE_ID }}
         AIRTABLE_TABLE_NAME=${{ secrets.AIRTABLE_TABLE_NAME }}
@@ -39,14 +38,12 @@ jobs:
         EOF
 
     - name: Run update timeline script
-      run: |
-        cd src/data
-        python updating_timeline.py
+      run: python src/data/updating_timeline.py
 
     - name: Commit changes
       if: success()
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add -A
+        git add src/data/data-timeline.json
         git diff --quiet && git diff --staged --quiet || (git commit -m "Update timeline data" && git push)
