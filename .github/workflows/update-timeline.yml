@@ -4,8 +4,8 @@ on:
   push:
     branches: [ main ]
     paths: [ 'src/data/updating_timeline.py' ]
-  schedule:
-    - cron: '0 0 * * *'  # Daily at midnight UTC
+  # schedule:
+    # - cron: '0 0 * * *'  # Daily at midnight UTC
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
